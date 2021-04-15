@@ -45,22 +45,31 @@ class Game {
         std::cin >> player.continueGame;
         player.continueGame = toupper(player.continueGame);
         if(player.continueGame == 'N') {
+          sayGoodBye();
           return;
         }
         playGame();
       } else {
         std::cout << "It looks like you ran out of money." << std::endl;
+        sayGoodBye();
         return;
+      }
+    }
+
+    void askForGuess() {
+      std::cout << "Pick a number [1-10]: ";
+      std::cin >> player.guess;
+      if(!validGuessInput(player.guess)) {
+        std::cout << "Invalid input." << std::endl;
+        std::cout << "Please enter a number between [1-10]" << std::endl;
+        askForGuess();
       }
     }
 
     void playGame() {
       askForBet();
-      std::cout << "Pick a number [1-10]: ";
-      std::cin >> player.guess;
-      if(validGuessInput(player.guess)) {
-        determinWinLose();
-      }
+      askForGuess();
+      determinWinLose();
     }
 
     private:
@@ -90,6 +99,11 @@ class Game {
         }
         player.displayDepositMoney();
         askToContinue();
+      }
+
+      void sayGoodBye() {
+        std::cout << "Thanks for playing the game!" << std::endl;
+        std::cout << "Good bye! 💚" << std::endl;
       }
 };
 
