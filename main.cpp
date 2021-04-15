@@ -10,6 +10,10 @@ struct Player {
   void displayDepositMoney() {
     std::cout << "Your current deposited money is: " << depositedMoney << std::endl;
   }
+
+  bool hasMoney() {
+    return depositedMoney != 0;
+  }
 };
 
 class Game {
@@ -19,11 +23,12 @@ class Game {
       std::cout << "Welcome to Number Guessing Casino!" << std::endl;
       std::cout << "Please enter the amount of money you want to deposit: ";
       std::cin >> player.depositedMoney;
-      askForBet();
+      playGame();
     }
 
   private:
     // ####### Main Game Functions #######
+
     void askForBet() {
       std::cout << "Place your bet: ";
       std::cin >> player.betMoney;
@@ -31,22 +36,26 @@ class Game {
         std::cout << "You dont't have enough money in your deposit" << std::endl;
         player.displayDepositMoney();
         askForBet();
-      } else {
-        playGame();
       }
     } 
 
     void askToContinue() {
-      std::cout << "Do you want to continue? [Y/N]: ";
-      std::cin >> player.continueGame;
-      player.continueGame = toupper(player.continueGame);
-      if(player.continueGame == 'N') {
+      if(player.hasMoney()) {
+        std::cout << "Do you want to continue? [Y/N]: ";
+        std::cin >> player.continueGame;
+        player.continueGame = toupper(player.continueGame);
+        if(player.continueGame == 'N') {
+          return;
+        }
+        playGame();
+      } else {
+        std::cout << "It looks like you ran out of money." << std::endl;
         return;
       }
-      askForBet();
     }
 
     void playGame() {
+      askForBet();
       std::cout << "Pick a number [1-10]: ";
       std::cin >> player.guess;
       if(validGuessInput(player.guess)) {
@@ -56,6 +65,7 @@ class Game {
 
     private:
       // ####### Utilities Functions #######
+
       int generateRandomNumber() {
         int number = rand() % 10 + 1;
         return number;
@@ -73,21 +83,18 @@ class Game {
         if(player.guess == correctGuess) {
           player.depositedMoney += (player.betMoney * 10);
           std::cout << "Your guess was correct!" << std::endl;
-          player.displayDepositMoney();
-          askToContinue();
         } else {
           std::cout << "Your guess was wrong you lost " << player.betMoney << "$" << std::endl;
           std::cout << "The correct answer was: " << correctGuess << std::endl;
-          player.depositedMoney -= player.betMoney;
-          player.displayDepositMoney();
-          askToContinue();
+          player.depositedMoney -= player.betMoney;    
         }
+        player.displayDepositMoney();
+        askToContinue();
       }
 };
 
 int main() {
   srand((unsigned) time(NULL));
   Game mainGame;
-  // std::cout << "Do you want to continue? [Y/N]: ";
   return 0;
 }
