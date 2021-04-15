@@ -6,6 +6,10 @@ struct Player {
   int betMoney;
   int guess;
   char continueGame;
+
+  void displayDepositMoney() {
+    std::cout << "Your current deposited money is: " << depositedMoney << std::endl;
+  }
 };
 
 class Game {
@@ -20,16 +24,12 @@ class Game {
 
   private:
     // ####### Main Game Functions #######
-    void displayDepositMoney() {
-      std::cout << "Your current deposited money is: " << player.depositedMoney << std::endl;
-    }
-
     void askForBet() {
       std::cout << "Place your bet: ";
       std::cin >> player.betMoney;
       if(player.betMoney > player.depositedMoney) {
         std::cout << "You dont't have enough money in your deposit" << std::endl;
-        displayDepositMoney();
+        player.displayDepositMoney();
         askForBet();
       } else {
         playGame();
@@ -73,13 +73,13 @@ class Game {
         if(player.guess == correctGuess) {
           player.depositedMoney += (player.betMoney * 10);
           std::cout << "Your guess was correct!" << std::endl;
-          displayDepositMoney();
+          player.displayDepositMoney();
           askToContinue();
         } else {
           std::cout << "Your guess was wrong you lost " << player.betMoney << "$" << std::endl;
           std::cout << "The correct answer was: " << correctGuess << std::endl;
           player.depositedMoney -= player.betMoney;
-          displayDepositMoney();
+          player.displayDepositMoney();
           askToContinue();
         }
       }
